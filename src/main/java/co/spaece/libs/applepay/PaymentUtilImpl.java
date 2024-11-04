@@ -56,7 +56,6 @@ class PaymentUtilImpl implements PaymentUtil {
 	private final String appleMerchantPrivateKeyPath;
 	private static KeyStore publicCertificatekeyStore;
 	private static KeyStore privateCertificateKeyStore;
-	private static PrivateKey merchantPrivateKey;
 	
 	PaymentUtilImpl(String appleRootCACertificatePath, String appleMerchantPrivateKeyPath) {
 		this.appleRootCACertificatePath = appleRootCACertificatePath;
@@ -75,13 +74,12 @@ class PaymentUtilImpl implements PaymentUtil {
 		
 		// Load merchant private key
 		initializePrivateCertificateKeyStore(appleMerchantPrivateKeyPath, privateKeyPassword);
-		merchantPrivateKey = getMerchantPrivateKey(privateKeyPassword);
 		
 		// Load Apple root certificate
 		initializePublicCertificateKeyStore(appleRootCACertificatePath);
 		
 		try {
-			return decrypt(paymentToken);
+			return decrypt(paymentToken, privateKeyPassword);
 		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
@@ -89,7 +87,7 @@ class PaymentUtilImpl implements PaymentUtil {
 	}
 	
 	@SuppressWarnings({ "unused", "unchecked" })
-	private PaymentData decrypt(PaymentToken tokenData)
+	protected PaymentData decrypt(PaymentToken tokenData, String privateKeyPassword)
 			throws Exception {
 		
 		byte[] signatureBytes = Base64.getDecoder().decode(tokenData.getSignature());
@@ -149,7 +147,7 @@ class PaymentUtilImpl implements PaymentUtil {
 			// Key agreement
 			String asymmetricKeyInfo = "ECDH";
 			KeyAgreement agreement = KeyAgreement.getInstance(asymmetricKeyInfo, PROVIDER_NAME);
-			agreement.init(merchantPrivateKey);
+			agreement.init(getMerchantPrivateKey(privateKeyPassword));
 			agreement.doPhase(ephemeralPublicKey, true);
 			byte[] sharedSecret = agreement.generateSecret();
 			
@@ -191,7 +189,7 @@ class PaymentUtilImpl implements PaymentUtil {
 		return messageDigest.digest(baos.toByteArray());
 	}
 	
-	private PrivateKey getMerchantPrivateKey(String privateKeyPassword) {
+	protected PrivateKey getMerchantPrivateKey(String privateKeyPassword) {
 		// Load the PKCS#12 keystore from the .p12 file
 		try {
 			String privateKeyAlias = extractAliasFromCertificate();
@@ -223,7 +221,7 @@ class PaymentUtilImpl implements PaymentUtil {
 		return Hex.decode(merchantIdentifier);
 	}
 	
-	private String extractAliasFromCertificate() throws KeyStoreException {
+	String extractAliasFromCertificate() throws KeyStoreException {
 		Enumeration<String> aliases = privateCertificateKeyStore.aliases();
 		String alias = null;
 		while (aliases.hasMoreElements()) {
@@ -258,9 +256,9 @@ class PaymentUtilImpl implements PaymentUtil {
 		}
 	}
 	
-	private void initializePrivateCertificateKeyStore(String privateKeyPath, String privateKeyPassword)
+	protected void initializePrivateCertificateKeyStore(String privateKeyPath, String privateKeyPassword)
 			throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
-		try (FileInputStream fis = new FileInputStream(privateKeyPath);) {
+		try (FileInputStream fis = new FileInputStream(privateKeyPath)) {
 			privateCertificateKeyStore = KeyStore.getInstance("PKCS12");
 			privateCertificateKeyStore.load(fis, privateKeyPassword.toCharArray());
 		}
