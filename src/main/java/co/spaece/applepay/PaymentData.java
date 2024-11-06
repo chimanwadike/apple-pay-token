@@ -1,7 +1,12 @@
 package co.spaece.applepay;
 
+import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Mirrors the Apple's PKPaymentData class
+ */
 public class PaymentData {
 	@JsonProperty("applicationPrimaryAccountNumber")
 	String applicationPrimaryAccountNumber;
@@ -43,4 +48,17 @@ public class PaymentData {
 		}
 	}
 	
+	Date signingDate;
+	
+	/**
+	 * Derived signing date from token decryption process.
+	 * Not part of original Apple's PKPaymentData
+	 */
+	public Date getSigningDate() {
+		return signingDate;
+	}
+	
+	public void setSigningDate(Date signingDate) {
+		this.signingDate = signingDate;
+	}
 }

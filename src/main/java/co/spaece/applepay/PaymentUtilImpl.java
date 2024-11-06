@@ -31,6 +31,7 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -121,6 +122,7 @@ class PaymentUtilImpl implements PaymentUtil {
 		// Verify signature
 		SignerInformationStore signerInformationStore = signedData.getSignerInfos();
 		boolean verified = false;
+		Date signingDate = null;
 		for (SignerInformation o : signerInformationStore.getSigners()) {
 			Collection<?> matches = certificateStore.getMatches(o.getSID());
 			if (!matches.isEmpty()) {
@@ -133,7 +135,9 @@ class PaymentUtilImpl implements PaymentUtil {
 					ASN1UTCTime signingTime = (ASN1UTCTime) set.getObjectAt(0).toASN1Primitive();
 					// Merchants can check the signing time of this payment to determine its
 					// freshness.
-					System.out.println("Signature verified.  Signing time is " + signingTime.getDate());
+					
+					signingDate = signingTime.getDate();
+					
 					verified = true;
 				}
 			}
@@ -165,7 +169,9 @@ class PaymentUtilImpl implements PaymentUtil {
 			// JSON payload
 			String data = new String(decryptedPaymentData, StandardCharsets.UTF_8);
 			ObjectMapper objectMapper = new ObjectMapper();
-			return objectMapper.readValue(data, PaymentData.class);
+			PaymentData paymentData = objectMapper.readValue(data, PaymentData.class);
+			paymentData.setSigningDate(signingDate);
+			return paymentData;
 		} else {
 			return null;
 		}

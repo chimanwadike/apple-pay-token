@@ -1,5 +1,8 @@
 package co.spaece.applepay;
 
+/**
+ * Mirrors apple's PKPaymentToken class
+ */
 public class PaymentToken {
 	
 	private String version;
