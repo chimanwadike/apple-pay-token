@@ -53,6 +53,7 @@ public class PaymentData {
 	/**
 	 * Derived signing date from token decryption process.
 	 * Not part of original Apple's PKPaymentData
+	 * @return Date
 	 */
 	public Date getSigningDate() {
 		return signingDate;
