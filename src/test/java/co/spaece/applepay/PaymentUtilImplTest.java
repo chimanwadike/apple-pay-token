@@ -1,4 +1,4 @@
-package co.spaece.libs.applepay;
+package co.spaece.applepay;
 
 import static org.junit.jupiter.api.Assertions.*;
 

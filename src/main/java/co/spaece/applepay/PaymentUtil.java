@@ -1,4 +1,4 @@
-package co.spaece.libs.applepay;
+package co.spaece.applepay;
 
 import java.io.IOException;
 import java.security.KeyStoreException;

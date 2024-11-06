@@ -1,4 +1,4 @@
-package co.spaece.libs.applepay;
+package co.spaece.applepay;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

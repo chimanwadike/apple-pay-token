@@ -1,6 +1,5 @@
-package co.spaece.libs.applepay;
+package co.spaece.applepay;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class PaymentUtilFactoryTest {
