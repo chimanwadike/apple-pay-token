@@ -48,6 +48,42 @@ public class PaymentData {
 		}
 	}
 	
+	public String getApplicationPrimaryAccountNumber() {
+		return applicationPrimaryAccountNumber;
+	}
+	
+	public String getApplicationExpirationDate() {
+		return applicationExpirationDate;
+	}
+	
+	public String getCurrencyCode() {
+		return currencyCode;
+	}
+	
+	public Float getTransactionAmount() {
+		return transactionAmount;
+	}
+	
+	public String getCardholderName() {
+		return cardholderName;
+	}
+	
+	public String getDeviceManufacturerIdentifier() {
+		return deviceManufacturerIdentifier;
+	}
+	
+	public String getPaymentDataType() {
+		return paymentDataType;
+	}
+	
+	public String getMerchantTokenIdentifier() {
+		return merchantTokenIdentifier;
+	}
+	
+	public DetailedPaymentData getPaymentData() {
+		return paymentData;
+	}
+	
 	Date signingDate;
 	
 	/**
@@ -59,7 +95,7 @@ public class PaymentData {
 		return signingDate;
 	}
 	
-	public void setSigningDate(Date signingDate) {
+	void setSigningDate(Date signingDate) {
 		this.signingDate = signingDate;
 	}
 }
