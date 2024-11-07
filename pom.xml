@@ -5,7 +5,7 @@
 
   <groupId>co.spaece</groupId>
   <artifactId>apple-pay-token</artifactId>
-  <version>0.0.1</version>
+  <version>0.1.0</version>
 
   <name>apple-pay-token</name>
   <description>A Java library to decrypt Apple Pay tokens and extract payment data for further business logic using key certificates</description>
